@@ -7,23 +7,38 @@ Shows the metrics an inventory team watches daily — in-stock rate, demand vs.
 units sold, inventory on-hand, and revenue — with sidebar filters for region,
 store, category, and date range.
 
-Run:
+Run locally:
     pip install -r requirements.txt
-    python generate_data.py          # writes data/supply_chain.csv
     streamlit run app.py
+
+The dashboard generates its synthetic dataset on first load if it isn't present,
+so it runs out-of-the-box locally and when deployed (e.g. Streamlit Community
+Cloud) with no manual data step.
 """
+
+import os
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+import generate_data
+
 st.set_page_config(page_title="Supply Chain KPI Dashboard", layout="wide",
                    page_icon="📦")
+
+DATA_PATH = "data/supply_chain.csv"
 
 
 @st.cache_data
 def load():
-    return pd.read_csv("data/supply_chain.csv", parse_dates=["date"])
+    # Auto-generate the synthetic data if it's not already present. This makes
+    # the app self-contained — no separate "run generate_data.py" step needed,
+    # which is what lets it deploy cleanly on Streamlit Community Cloud.
+    if not os.path.exists(DATA_PATH):
+        os.makedirs(os.path.dirname(DATA_PATH), exist_ok=True)
+        generate_data.generate().to_csv(DATA_PATH, index=False)
+    return pd.read_csv(DATA_PATH, parse_dates=["date"])
 
 
 df = load()
