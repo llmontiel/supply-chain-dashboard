@@ -1,5 +1,7 @@
 # Supply Chain KPI Dashboard
 
+🔗 Live demo: https://supply-chain-dashboard-vpvl3qyrskqzwuaf8twxri.streamlit.app
+
 An interactive dashboard for the metrics an inventory team watches every day —
 in-stock rate, demand vs. units sold, inventory on-hand, and revenue — with
 live filters for region, store, category, and date range. Built with Streamlit
@@ -35,15 +37,17 @@ categories over 6 months. Sample KPIs from the full dataset:
 
 ```bash
 pip install -r requirements.txt
-python generate_data.py     # writes data/supply_chain.csv
-streamlit run app.py        # opens the dashboard in your browser
+streamlit run app.py        # opens the dashboard; data auto-generates on first load
 ```
 
-## Deploy it free
+The app generates its synthetic dataset on first load if it isn't present, so it
+runs out-of-the-box locally and when deployed — no manual data step.
 
-Streamlit apps host for free on [Streamlit Community Cloud](https://streamlit.io/cloud):
-point it at this repo and `app.py`, and you get a public live URL — a great
-link to drop straight into a portfolio or resume.
+## Live deployment
+
+This dashboard is deployed free on [Streamlit Community Cloud](https://streamlit.io/cloud):
+[supply-chain-dashboard.streamlit.app](https://supply-chain-dashboard-vpvl3qyrskqzwuaf8twxri.streamlit.app).
+(Free-tier apps sleep after inactivity and take ~30s to wake — that's expected.)
 
 ## Why it's built this way
 
@@ -63,6 +67,6 @@ supply-chain-dashboard/
 ├── generate_data.py        # synthetic KPI data generator
 ├── requirements.txt
 ├── dashboard_preview.png   # static preview (shown above)
-├── data/                   # supply_chain.csv lands here
+├── data/                   # supply_chain.csv lands here (auto-generated)
 └── outputs/                # preview image source
 ```

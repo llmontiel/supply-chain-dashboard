@@ -91,7 +91,7 @@ with left:
                   labels={"in_stock_rate": "In-stock rate"})
     fig.update_yaxes(tickformat=".0%")
     fig.update_traces(line_color="#2f7a3f")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 with right:
     st.subheader("Revenue by category")
@@ -99,12 +99,12 @@ with right:
     fig2 = px.bar(bycat, x="revenue", y="category", orientation="h",
                   labels={"revenue": "Revenue ($)"})
     fig2.update_traces(marker_color="#2f7a3f")
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, width="stretch")
 
 st.subheader("Demand vs. units sold by region")
 reg = f.groupby("region")[["demand", "units_sold"]].sum().reset_index()
 fig3 = px.bar(reg, x="region", y=["demand", "units_sold"], barmode="group",
               labels={"value": "Units", "variable": "Metric"})
-st.plotly_chart(fig3, use_container_width=True)
+st.plotly_chart(fig3, width="stretch")
 
 st.caption("Built with Streamlit + Plotly · data is synthetic")
