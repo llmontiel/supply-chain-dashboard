@@ -49,19 +49,27 @@ regions = st.sidebar.multiselect("Region", sorted(df["region"].unique()),
                                  default=sorted(df["region"].unique()))
 cats = st.sidebar.multiselect("Category", sorted(df["category"].unique()),
                               default=sorted(df["category"].unique()))
-dmin, dmax = df["date"].min(), df["date"].max()
+
+# Streamlit's date_input expects plain python date objects, not pandas
+# Timestamps — convert explicitly so the widget renders reliably on first load.
+dmin = df["date"].min().date()
+dmax = df["date"].max().date()
 date_range = st.sidebar.date_input("Date range", (dmin, dmax),
                                    min_value=dmin, max_value=dmax)
 
 f = df[df["region"].isin(regions) & df["category"].isin(cats)]
 if isinstance(date_range, (list, tuple)) and len(date_range) == 2:
-    f = f[(f["date"] >= pd.Timestamp(date_range[0])) &
-          (f["date"] <= pd.Timestamp(date_range[1]))]
+    start, end = pd.Timestamp(date_range[0]), pd.Timestamp(date_range[1])
+    f = f[(f["date"] >= start) & (f["date"] <= end)]
 
 # ---------------- Header ----------------
 st.title("📦 Supply Chain KPI Dashboard")
 st.caption("In-stock, demand, inventory, and revenue — synthetic data, "
            "fully reproducible.")
+
+if f.empty:
+    st.warning("No data for the selected filters — widen your selection.")
+    st.stop()
 
 # ---------------- KPI row ----------------
 c1, c2, c3, c4 = st.columns(4)
